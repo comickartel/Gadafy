@@ -1,0 +1,2295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube Clone</title>
+
+<style>
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#0f0f0f;
+    color:#fff;
+    font-family:Roboto,Arial,Helvetica,sans-serif;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header{
+    height:64px;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    background:#0f0f0f;
+    display:flex;
+    align-items:center;
+    padding:0 20px;
+    z-index:1000;
+    border-bottom:1px solid #222;
+}
+
+.menu-btn{
+    width:40px;
+    height:40px;
+    border:0;
+    background:none;
+    color:white;
+    font-size:25px;
+    cursor:pointer;
+    border-radius:50%;
+}
+
+.menu-btn:hover{
+    background:#272727;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    margin-left:12px;
+    font-size:22px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.youtube-icon{
+    width:34px;
+    height:24px;
+    border-radius:7px;
+    background:#ff0000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:13px;
+}
+
+.search-container{
+    flex:1;
+    max-width:650px;
+    display:flex;
+    margin:auto;
+}
+
+.search-input{
+    flex:1;
+    height:42px;
+    background:#121212;
+    color:#fff;
+    border:1px solid #303030;
+    border-radius:22px 0 0 22px;
+    padding:0 18px;
+    outline:none;
+    font-size:16px;
+}
+
+.search-input:focus{
+    border-color:#3ea6ff;
+}
+
+.search-button{
+    width:65px;
+    height:42px;
+    background:#272727;
+    border:1px solid #303030;
+    color:white;
+    border-radius:0 22px 22px 0;
+    cursor:pointer;
+    font-size:20px;
+}
+
+.search-button:hover{
+    background:#333;
+}
+
+.header-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.header-btn{
+    border:0;
+    background:none;
+    color:#fff;
+    font-size:22px;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    cursor:pointer;
+}
+
+.header-btn:hover{
+    background:#272727;
+}
+
+.profile{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#ff416c,#ff4b2b);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    position:fixed;
+    top:64px;
+    left:0;
+    bottom:0;
+    width:240px;
+    background:#0f0f0f;
+    padding:12px;
+    overflow-y:auto;
+    z-index:900;
+}
+
+.sidebar-section{
+    padding-bottom:12px;
+    margin-bottom:12px;
+    border-bottom:1px solid #303030;
+}
+
+.sidebar-item{
+    height:44px;
+    display:flex;
+    align-items:center;
+    gap:24px;
+    padding:0 15px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.sidebar-item:hover{
+    background:#272727;
+}
+
+.sidebar-item.active{
+    background:#272727;
+    font-weight:bold;
+}
+
+.sidebar-icon{
+    width:24px;
+    text-align:center;
+    font-size:21px;
+}
+
+.sidebar-title{
+    padding:12px 15px;
+    color:#aaa;
+    font-size:14px;
+    font-weight:bold;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    margin-left:240px;
+    padding:84px 24px 50px;
+}
+
+/* =========================================================
+   CATEGORY BAR
+========================================================= */
+
+.categories{
+    position:fixed;
+    top:64px;
+    left:240px;
+    right:0;
+    height:56px;
+    background:#0f0f0f;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:0 20px;
+    overflow-x:auto;
+    z-index:800;
+    scrollbar-width:none;
+}
+
+.categories::-webkit-scrollbar{
+    display:none;
+}
+
+.category{
+    white-space:nowrap;
+    background:#272727;
+    color:white;
+    border:0;
+    padding:9px 15px;
+    border-radius:9px;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.category:hover{
+    background:#3f3f3f;
+}
+
+.category.active{
+    background:white;
+    color:black;
+}
+
+/* =========================================================
+   VIDEO GRID
+========================================================= */
+
+.video-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:38px 16px;
+}
+
+.video-card{
+    min-width:0;
+    cursor:pointer;
+}
+
+.thumbnail{
+    width:100%;
+    aspect-ratio:16/9;
+    border-radius:10px;
+    overflow:hidden;
+    position:relative;
+    background:#222;
+}
+
+.thumbnail img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:.25s;
+}
+
+.video-card:hover .thumbnail img{
+    transform:scale(1.04);
+}
+
+.duration{
+    position:absolute;
+    right:6px;
+    bottom:6px;
+    background:rgba(0,0,0,.85);
+    padding:3px 5px;
+    border-radius:3px;
+    font-size:12px;
+}
+
+.video-info{
+    display:flex;
+    gap:12px;
+    padding-top:11px;
+}
+
+.channel-avatar{
+    flex:0 0 38px;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#673ab7,#e91e63);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.video-details{
+    min-width:0;
+}
+
+.video-title{
+    font-size:15px;
+    font-weight:600;
+    line-height:21px;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+}
+
+.channel-name{
+    color:#aaa;
+    font-size:13px;
+    margin-top:7px;
+}
+
+.channel-name .verified{
+    color:#aaa;
+}
+
+.video-meta{
+    color:#aaa;
+    font-size:13px;
+    margin-top:4px;
+}
+
+/* =========================================================
+   LIVE CARD
+========================================================= */
+
+.live{
+    position:absolute;
+    left:7px;
+    bottom:7px;
+    background:#ff0000;
+    padding:4px 7px;
+    border-radius:3px;
+    font-size:11px;
+    font-weight:bold;
+}
+
+/* =========================================================
+   PLAYER MODAL
+========================================================= */
+
+.player-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.96);
+    z-index:5000;
+    display:none;
+    overflow-y:auto;
+}
+
+.player-modal.open{
+    display:block;
+}
+
+.player-container{
+    width:min(1100px,94%);
+    margin:70px auto;
+}
+
+.close-player{
+    position:fixed;
+    top:18px;
+    right:25px;
+    width:45px;
+    height:45px;
+    border:0;
+    border-radius:50%;
+    background:#272727;
+    color:white;
+    font-size:25px;
+    cursor:pointer;
+    z-index:10;
+}
+
+.video-player{
+    width:100%;
+    aspect-ratio:16/9;
+    background:#000;
+    border-radius:8px;
+    overflow:hidden;
+}
+
+.video-player img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.player-title{
+    font-size:22px;
+    margin-top:18px;
+}
+
+.player-channel{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:18px;
+    padding-bottom:18px;
+    border-bottom:1px solid #303030;
+}
+
+.channel-info{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.subscribe{
+    background:#fff;
+    color:#000;
+    border:0;
+    padding:10px 18px;
+    border-radius:20px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.subscribe.subscribed{
+    background:#272727;
+    color:#fff;
+}
+
+.player-actions{
+    display:flex;
+    gap:10px;
+}
+
+.player-action{
+    border:0;
+    background:#272727;
+    color:white;
+    padding:10px 15px;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+.player-action:hover{
+    background:#3f3f3f;
+}
+
+.description{
+    background:#272727;
+    border-radius:12px;
+    padding:15px;
+    margin-top:18px;
+    line-height:22px;
+    font-size:14px;
+}
+
+/* =========================================================
+   COMMENTS
+========================================================= */
+
+.comments{
+    margin-top:30px;
+}
+
+.comments h2{
+    font-size:20px;
+    margin-bottom:20px;
+}
+
+.comment-input{
+    display:flex;
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.comment-input input{
+    flex:1;
+    background:transparent;
+    border:0;
+    border-bottom:1px solid #555;
+    color:#fff;
+    padding:10px;
+    outline:none;
+}
+
+.comment-input button{
+    background:#3ea6ff;
+    color:#000;
+    border:0;
+    padding:9px 15px;
+    border-radius:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.comment{
+    display:flex;
+    gap:12px;
+    margin-bottom:20px;
+}
+
+.comment-avatar{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#00c6ff,#0072ff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    flex-shrink:0;
+}
+
+.comment-author{
+    font-weight:bold;
+    font-size:13px;
+}
+
+.comment-text{
+    margin-top:5px;
+    line-height:20px;
+}
+
+/* =========================================================
+   CREATE PANEL
+========================================================= */
+
+.create-panel{
+    position:fixed;
+    top:75px;
+    right:25px;
+    width:350px;
+    background:#282828;
+    border-radius:15px;
+    padding:20px;
+    z-index:4000;
+    display:none;
+    box-shadow:0 10px 50px #000;
+}
+
+.create-panel.open{
+    display:block;
+}
+
+.create-panel h2{
+    margin-bottom:20px;
+}
+
+.create-panel input,
+.create-panel textarea{
+    width:100%;
+    background:#181818;
+    color:#fff;
+    border:1px solid #444;
+    border-radius:8px;
+    padding:12px;
+    margin-bottom:12px;
+    outline:none;
+}
+
+.create-panel textarea{
+    resize:none;
+    height:100px;
+}
+
+.create-button{
+    width:100%;
+    background:#ff0000;
+    color:white;
+    border:0;
+    padding:12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+.notification-panel{
+    position:fixed;
+    top:65px;
+    right:80px;
+    width:350px;
+    max-height:500px;
+    overflow:auto;
+    background:#282828;
+    border-radius:12px;
+    padding:15px;
+    z-index:4000;
+    display:none;
+    box-shadow:0 10px 50px #000;
+}
+
+.notification-panel.open{
+    display:block;
+}
+
+.notification{
+    display:flex;
+    gap:12px;
+    padding:15px 5px;
+    border-bottom:1px solid #3a3a3a;
+}
+
+.notification-icon{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#ff0000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+    bottom:30px;
+    left:50%;
+    transform:translate(-50%,120px);
+    background:#fff;
+    color:#000;
+    padding:13px 22px;
+    border-radius:30px;
+    font-weight:bold;
+    z-index:9000;
+    transition:.3s;
+}
+
+.toast.show{
+    transform:translate(-50%,0);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1200px){
+
+    .video-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+}
+
+@media(max-width:900px){
+
+    .sidebar{
+        width:72px;
+    }
+
+    .sidebar-item{
+        justify-content:center;
+        padding:0;
+    }
+
+    .sidebar-item span:last-child,
+    .sidebar-title{
+        display:none;
+    }
+
+    .main{
+        margin-left:72px;
+    }
+
+    .categories{
+        left:72px;
+    }
+
+    .video-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px){
+
+    .header{
+        padding:0 10px;
+    }
+
+    .logo span{
+        display:none;
+    }
+
+    .search-container{
+        margin-left:10px;
+    }
+
+    .header-actions .header-btn:first-child{
+        display:none;
+    }
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+        padding:125px 10px 70px;
+    }
+
+    .categories{
+        left:0;
+        top:64px;
+    }
+
+    .video-grid{
+        grid-template-columns:1fr;
+        gap:25px;
+    }
+
+    .thumbnail{
+        border-radius:6px;
+    }
+
+    .player-container{
+        width:100%;
+        margin:64px auto 20px;
+    }
+
+    .player-title{
+        padding:0 12px;
+        font-size:18px;
+    }
+
+    .player-channel,
+    .description,
+    .comments{
+        margin-left:12px;
+        margin-right:12px;
+    }
+
+    .notification-panel,
+    .create-panel{
+        right:10px;
+        width:calc(100% - 20px);
+    }
+
+}
+
+/* =========================================================
+   EMPTY SEARCH
+========================================================= */
+
+.no-results{
+    grid-column:1/-1;
+    text-align:center;
+    padding:80px 20px;
+    color:#aaa;
+    font-size:18px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+    <button class="menu-btn" onclick="toggleSidebar()">
+        ☰
+    </button>
+
+    <div class="logo" onclick="goHome()">
+        <div class="youtube-icon">▶</div>
+        <span>YouTube</span>
+    </div>
+
+    <div class="search-container">
+
+        <input
+            id="searchInput"
+            class="search-input"
+            type="text"
+            placeholder="Search"
+            onkeydown="searchKey(event)"
+        >
+
+        <button
+            class="search-button"
+            onclick="searchVideos()"
+        >
+            🔍
+        </button>
+
+    </div>
+
+    <div class="header-actions">
+
+        <button
+            class="header-btn"
+            onclick="openCreate()"
+            title="Create"
+        >
+            ＋
+        </button>
+
+        <button
+            class="header-btn"
+            onclick="toggleNotifications()"
+            title="Notifications"
+        >
+            🔔
+        </button>
+
+        <div
+            class="profile"
+            onclick="showToast('Profile opened')"
+        >
+            G
+        </div>
+
+    </div>
+
+</header>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-section">
+
+        <div
+            class="sidebar-item active"
+            onclick="goHome()"
+        >
+            <span class="sidebar-icon">⌂</span>
+            <span>Home</span>
+        </div>
+
+        <div
+            class="sidebar-item"
+            onclick="showToast('Shorts selected')"
+        >
+            <span class="sidebar-icon">▶</span>
+            <span>Shorts</span>
+        </div>
+
+        <div
+            class="sidebar-item"
+            onclick="showToast('Subscriptions selected')"
+        >
+            <span class="sidebar-icon">▣</span>
+            <span>Subscriptions</span>
+        </div>
+
+    </div>
+
+    <div class="sidebar-section">
+
+        <div class="sidebar-title">
+            You
+        </div>
+
+        <div class="sidebar-item">
+            <span class="sidebar-icon">◷</span>
+            <span>History</span>
+        </div>
+
+        <div class="sidebar-item">
+            <span class="sidebar-icon">▣</span>
+            <span>Playlists</span>
+        </div>
+
+        <div class="sidebar-item">
+            <span class="sidebar-icon">▶</span>
+            <span>Your videos</span>
+        </div>
+
+        <div class="sidebar-item">
+            <span class="sidebar-icon">⏱</span>
+            <span>Watch later</span>
+        </div>
+
+        <div class="sidebar-item">
+            <span class="sidebar-icon">👍</span>
+            <span>Liked videos</span>
+        </div>
+
+    </div>
+
+    <div class="sidebar-section">
+
+        <div class="sidebar-title">
+            Explore
+        </div>
+
+        <div class="sidebar-item">
+            <span class="sidebar-icon">🔥</span>
+            <span>Trending</span>
+        </div>
+
+        <div class="sidebar-item">
+            <span class="sidebar-icon">🎵</span>
+            <span>Music</span>
+        </div>
+
+        <div class="sidebar-item">
+            <span class="sidebar-icon">🎬</span>
+            <span>Movies</span>
+        </div>
+
+        <div class="sidebar-item">
+            <span class="sidebar-icon">🎮</span>
+            <span>Gaming</span>
+        </div>
+
+        <div class="sidebar-item">
+            <span class="sidebar-icon">🏆</span>
+            <span>Sports</span>
+        </div>
+
+    </div>
+
+</aside>
+
+<!-- =========================================================
+     CATEGORIES
+========================================================= -->
+
+<div class="categories">
+
+    <button class="category active" onclick="filterCategory('all',this)">
+        All
+    </button>
+
+    <button class="category" onclick="filterCategory('music',this)">
+        Music
+    </button>
+
+    <button class="category" onclick="filterCategory('coding',this)">
+        Coding
+    </button>
+
+    <button class="category" onclick="filterCategory('gaming',this)">
+        Gaming
+    </button>
+
+    <button class="category" onclick="filterCategory('science',this)">
+        Science
+    </button>
+
+    <button class="category" onclick="filterCategory('news',this)">
+        News
+    </button>
+
+    <button class="category" onclick="filterCategory('live',this)">
+        Live
+    </button>
+
+    <button class="category" onclick="filterCategory('sports',this)">
+        Sports
+    </button>
+
+    <button class="category" onclick="filterCategory('technology',this)">
+        Technology
+    </button>
+
+</div>
+
+<!-- =========================================================
+     MAIN VIDEO FEED
+========================================================= -->
+
+<main class="main">
+
+    <div
+        class="video-grid"
+        id="videoGrid"
+    >
+
+        <!-- VIDEO 1 -->
+
+        <article
+            class="video-card"
+            data-category="coding technology"
+            data-title="Build a Website From Scratch"
+            onclick="openVideo(this)"
+        >
+
+            <div class="thumbnail">
+
+                <img
+                    src="https://picsum.photos/seed/code1/800/450"
+                >
+
+                <span class="duration">
+                    18:42
+                </span>
+
+            </div>
+
+            <div class="video-info">
+
+                <div class="channel-avatar">
+                    G
+                </div>
+
+                <div class="video-details">
+
+                    <div class="video-title">
+                        Build a Website From Scratch — Full HTML CSS JavaScript Tutorial
+                    </div>
+
+                    <div class="channel-name">
+                        George Coding ✓
+                    </div>
+
+                    <div class="video-meta">
+                        1.4M views · 2 days ago
+                    </div>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        <!-- VIDEO 2 -->
+
+        <article
+            class="video-card"
+            data-category="music"
+            data-title="Amazing Music Mix 2026"
+            onclick="openVideo(this)"
+        >
+
+            <div class="thumbnail">
+
+                <img
+                    src="https://picsum.photos/seed/music2/800/450"
+                >
+
+                <span class="duration">
+                    42:15
+                </span>
+
+            </div>
+
+            <div class="video-info">
+
+                <div class="channel-avatar">
+                    M
+                </div>
+
+                <div class="video-details">
+
+                    <div class="video-title">
+                        Amazing Music Mix 2026 🎵 Best Songs You Need To Hear
+                    </div>
+
+                    <div class="channel-name">
+                        Music World ✓
+                    </div>
+
+                    <div class="video-meta">
+                        8.7M views · 1 week ago
+                    </div>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        <!-- VIDEO 3 -->
+
+        <article
+            class="video-card"
+            data-category="gaming"
+            data-title="Ultimate Gaming Setup"
+            onclick="openVideo(this)"
+        >
+
+            <div class="thumbnail">
+
+                <img
+                    src="https://picsum.photos/seed/gaming3/800/450"
+                >
+
+                <span class="duration">
+                    12:34
+                </span>
+
+            </div>
+
+            <div class="video-info">
+
+                <div class="channel-avatar">
+                    X
+                </div>
+
+                <div class="video-details">
+
+                    <div class="video-title">
+                        My INSANE Gaming Setup in 2026!
+                    </div>
+
+                    <div class="channel-name">
+                        XGaming
+                    </div>
+
+                    <div class="video-meta">
+                        532K views · 3 days ago
+                    </div>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        <!-- VIDEO 4 -->
+
+        <article
+            class="video-card"
+            data-category="science"
+            data-title="The Universe Explained"
+            onclick="openVideo(this)"
+        >
+
+            <div class="thumbnail">
+
+                <img
+                    src="https://picsum.photos/seed/science4/800/450"
+                >
+
+                <span class="duration">
+                    25:18
+                </span>
+
+            </div>
+
+            <div class="video-info">
+
+                <div class="channel-avatar">
+                    S
+                </div>
+
+                <div class="video-details">
+
+                    <div class="video-title">
+                        The Universe Explained: Everything We Know
+                    </div>
+
+                    <div class="channel-name">
+                        Science Central ✓
+                    </div>
+
+                    <div class="video-meta">
+                        4.2M views · 5 days ago
+                    </div>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        <!-- VIDEO 5 -->
+
+        <article
+            class="video-card"
+            data-category="technology coding"
+            data-title="Artificial Intelligence Explained"
+            onclick="openVideo(this)"
+        >
+
+            <div class="thumbnail">
+
+                <img
+                    src="https://picsum.photos/seed/ai5/800/450"
+                >
+
+                <span class="duration">
+                    31:05
+                </span>
+
+            </div>
+
+            <div class="video-info">
+
+                <div class="channel-avatar">
+                    A
+                </div>
+
+                <div class="video-details">
+
+                    <div class="video-title">
+                        Artificial Intelligence Explained Simply
+                    </div>
+
+                    <div class="channel-name">
+                        AI Academy ✓
+                    </div>
+
+                    <div class="video-meta">
+                        2.9M views · 1 month ago
+                    </div>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        <!-- VIDEO 6 -->
+
+        <article
+            class="video-card"
+            data-category="sports"
+            data-title="Top Football Moments"
+            onclick="openVideo(this)"
+        >
+
+            <div class="thumbnail">
+
+                <img
+                    src="https://picsum.photos/seed/sports6/800/450"
+                >
+
+                <span class="duration">
+                    10:29
+                </span>
+
+            </div>
+
+            <div class="video-info">
+
+                <div class="channel-avatar">
+                    F
+                </div>
+
+                <div class="video-details">
+
+                    <div class="video-title">
+                        Top Football Moments You Have To See
+                    </div>
+
+                    <div class="channel-name">
+                        Football Daily
+                    </div>
+
+                    <div class="video-meta">
+                        1.8M views · 4 days ago
+                    </div>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        <!-- VIDEO 7 -->
+
+        <article
+            class="video-card"
+            data-category="news"
+            data-title="Latest World News"
+            onclick="openVideo(this)"
+        >
+
+            <div class="thumbnail">
+
+                <img
+                    src="https://picsum.photos/seed/news7/800/450"
+                >
+
+                <span class="live">
+                    LIVE
+                </span>
+
+                <span class="duration">
+                    LIVE
+                </span>
+
+            </div>
+
+            <div class="video-info">
+
+                <div class="channel-avatar">
+                    N
+                </div>
+
+                <div class="video-details">
+
+                    <div class="video-title">
+                        LIVE: Latest World News and Updates
+                    </div>
+
+                    <div class="channel-name">
+                        Global News
+                    </div>
+
+                    <div class="video-meta">
+                        45K watching
+                    </div>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        <!-- VIDEO 8 -->
+
+        <article
+            class="video-card"
+            data-category="coding technology"
+            data-title="JavaScript Masterclass"
+            onclick="openVideo(this)"
+        >
+
+            <div class="thumbnail">
+
+                <img
+                    src="https://picsum.photos/seed/javascript8/800/450"
+                >
+
+                <span class="duration">
+                    55:20
+                </span>
+
+            </div>
+
+            <div class="video-info">
+
+                <div class="channel-avatar">
+                    J
+                </div>
+
+                <div class="video-details">
+
+                    <div class="video-title">
+                        JavaScript Masterclass — Become a Pro Developer
+                    </div>
+
+                    <div class="channel-name">
+                        JS Academy ✓
+                    </div>
+
+                    <div class="video-meta">
+                        923K views · 2 weeks ago
+                    </div>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</main>
+
+<!-- =========================================================
+     VIDEO PLAYER
+========================================================= -->
+
+<div
+    class="player-modal"
+    id="playerModal"
+>
+
+    <button
+        class="close-player"
+        onclick="closePlayer()"
+    >
+        ×
+    </button>
+
+    <div class="player-container">
+
+        <div class="video-player">
+
+            <img id="playerImage">
+
+        </div>
+
+        <h1
+            class="player-title"
+            id="playerTitle"
+        >
+        </h1>
+
+        <div class="player-channel">
+
+            <div class="channel-info">
+
+                <div class="channel-avatar">
+                    G
+                </div>
+
+                <div>
+
+                    <strong id="playerChannel">
+                        George Channel
+                    </strong>
+
+                    <div
+                        style="
+                            color:#aaa;
+                            font-size:13px;
+                            margin-top:4px;
+                        "
+                    >
+                        1.2M subscribers
+                    </div>
+
+                </div>
+
+                <button
+                    class="subscribe"
+                    id="subscribeButton"
+                    onclick="subscribe()"
+                >
+                    Subscribe
+                </button>
+
+            </div>
+
+            <div class="player-actions">
+
+                <button
+                    class="player-action"
+                    onclick="likeVideo()"
+                    id="likeButton"
+                >
+                    👍 Like
+                </button>
+
+                <button
+                    class="player-action"
+                    onclick="shareVideo()"
+                >
+                    ↗ Share
+                </button>
+
+                <button
+                    class="player-action"
+                    onclick="saveVideo()"
+                >
+                    ▣ Save
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="description">
+
+            <strong id="playerViews">
+                1.4M views
+            </strong>
+
+            <br><br>
+
+            Welcome to the channel! Thanks for watching.
+            Don't forget to like, subscribe and turn on
+            notifications for more videos.
+
+        </div>
+
+        <section class="comments">
+
+            <h2>
+                Comments
+            </h2>
+
+            <div class="comment-input">
+
+                <input
+                    id="commentInput"
+                    placeholder="Add a comment..."
+                    onkeydown="commentKey(event)"
+                >
+
+                <button onclick="addComment()">
+                    Comment
+                </button>
+
+            </div>
+
+            <div id="commentList">
+
+                <div class="comment">
+
+                    <div class="comment-avatar">
+                        A
+                    </div>
+
+                    <div>
+
+                        <div class="comment-author">
+                            Alex
+                        </div>
+
+                        <div class="comment-text">
+                            This video is amazing! 🔥
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="comment">
+
+                    <div class="comment-avatar">
+                        M
+                    </div>
+
+                    <div>
+
+                        <div class="comment-author">
+                            Maya
+                        </div>
+
+                        <div class="comment-text">
+                            Really helpful. Thank you!
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     CREATE PANEL
+========================================================= -->
+
+<div
+    class="create-panel"
+    id="createPanel"
+>
+
+    <h2>
+        Create
+    </h2>
+
+    <input
+        id="newTitle"
+        placeholder="Video title"
+    >
+
+    <textarea
+        id="newDescription"
+        placeholder="Description"
+    ></textarea>
+
+    <button
+        class="create-button"
+        onclick="createVideo()"
+    >
+        Publish
+    </button>
+
+</div>
+
+<!-- =========================================================
+     NOTIFICATIONS
+========================================================= -->
+
+<div
+    class="notification-panel"
+    id="notificationPanel"
+>
+
+    <h3>
+        Notifications
+    </h3>
+
+    <div class="notification">
+
+        <div class="notification-icon">
+            👍
+        </div>
+
+        <div>
+            Someone liked your video.
+            <br>
+            <small style="color:#aaa;">
+                2 minutes ago
+            </small>
+        </div>
+
+    </div>
+
+    <div class="notification">
+
+        <div class="notification-icon">
+            🔔
+        </div>
+
+        <div>
+            You have a new subscriber.
+            <br>
+            <small style="color:#aaa;">
+                15 minutes ago
+            </small>
+        </div>
+
+    </div>
+
+    <div class="notification">
+
+        <div class="notification-icon">
+            💬
+        </div>
+
+        <div>
+            Someone commented on your video.
+            <br>
+            <small style="color:#aaa;">
+                1 hour ago
+            </small>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<script>
+
+/* =========================================================
+   GLOBAL STATE
+========================================================= */
+
+let currentVideo = null;
+let subscribed = false;
+let liked = false;
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+function showToast(message){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer = setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    },2000);
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+function goHome(){
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+    document
+        .querySelectorAll(".video-card")
+        .forEach(card => {
+            card.style.display = "";
+        });
+
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+function toggleSidebar(){
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    if(window.innerWidth <= 900){
+
+        sidebar.style.display =
+            sidebar.style.display === "none"
+                ? "block"
+                : "none";
+
+    }
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function searchKey(event){
+
+    if(event.key === "Enter"){
+
+        searchVideos();
+
+    }
+
+}
+
+
+function searchVideos(){
+
+    const query =
+        document
+            .getElementById("searchInput")
+            .value
+            .trim()
+            .toLowerCase();
+
+    const cards =
+        document.querySelectorAll(".video-card");
+
+    let found = 0;
+
+    cards.forEach(card => {
+
+        const title =
+            card
+                .dataset
+                .title
+                .toLowerCase();
+
+        const category =
+            card
+                .dataset
+                .category
+                .toLowerCase();
+
+        if(
+            !query ||
+            title.includes(query) ||
+            category.includes(query)
+        ){
+
+            card.style.display = "";
+
+            found++;
+
+        }else{
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+    if(query){
+
+        showToast(
+            found +
+            " result" +
+            (found === 1 ? "" : "s") +
+            " found"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CATEGORY FILTER
+========================================================= */
+
+function filterCategory(category,button){
+
+    document
+        .querySelectorAll(".category")
+        .forEach(item => {
+
+            item.classList.remove("active");
+
+        });
+
+    button.classList.add("active");
+
+    document
+        .querySelectorAll(".video-card")
+        .forEach(card => {
+
+            if(
+                category === "all" ||
+                card.dataset.category
+                    .includes(category)
+            ){
+
+                card.style.display = "";
+
+            }else{
+
+                card.style.display = "none";
+
+            }
+
+        });
+
+}
+
+
+/* =========================================================
+   OPEN VIDEO
+========================================================= */
+
+function openVideo(card){
+
+    currentVideo = card;
+
+    const image =
+        card.querySelector(".thumbnail img");
+
+    const title =
+        card.dataset.title;
+
+    document
+        .getElementById("playerImage")
+        .src = image.src;
+
+    document
+        .getElementById("playerTitle")
+        .textContent = title;
+
+    document
+        .getElementById("playerModal")
+        .classList.add("open");
+
+    document.body.style.overflow = "hidden";
+
+}
+
+
+/* =========================================================
+   CLOSE PLAYER
+========================================================= */
+
+function closePlayer(){
+
+    document
+        .getElementById("playerModal")
+        .classList.remove("open");
+
+    document.body.style.overflow = "";
+
+}
+
+
+/* =========================================================
+   SUBSCRIBE
+========================================================= */
+
+function subscribe(){
+
+    const button =
+        document
+            .getElementById("subscribeButton");
+
+    subscribed = !subscribed;
+
+    if(subscribed){
+
+        button.textContent =
+            "Subscribed ✓";
+
+        button.classList.add("subscribed");
+
+        showToast("Subscribed!");
+
+    }else{
+
+        button.textContent =
+            "Subscribe";
+
+        button.classList.remove("subscribed");
+
+        showToast("Unsubscribed");
+
+    }
+
+}
+
+
+/* =========================================================
+   LIKE VIDEO
+========================================================= */
+
+function likeVideo(){
+
+    const button =
+        document.getElementById("likeButton");
+
+    liked = !liked;
+
+    if(liked){
+
+        button.textContent =
+            "👍 Liked";
+
+        showToast("Video liked!");
+
+    }else{
+
+        button.textContent =
+            "👍 Like";
+
+        showToast("Like removed");
+
+    }
+
+}
+
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+function shareVideo(){
+
+    if(navigator.share){
+
+        navigator.share({
+            title:
+                document.getElementById(
+                    "playerTitle"
+                ).textContent,
+
+            text:
+                "Check out this video!"
+        });
+
+    }else{
+
+        showToast("Video link copied!");
+
+    }
+
+}
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+function saveVideo(){
+
+    showToast("Saved to Watch later");
+
+}
+
+
+/* =========================================================
+   COMMENTS
+========================================================= */
+
+function commentKey(event){
+
+    if(event.key === "Enter"){
+
+        addComment();
+
+    }
+
+}
+
+
+function addComment(){
+
+    const input =
+        document.getElementById(
+            "commentInput"
+        );
+
+    const text =
+        input.value.trim();
+
+    if(!text){
+
+        showToast(
+            "Write a comment first"
+        );
+
+        return;
+
+    }
+
+    const comment =
+        document.createElement("div");
+
+    comment.className = "comment";
+
+    comment.innerHTML = `
+
+        <div class="comment-avatar">
+            G
+        </div>
+
+        <div>
+
+            <div class="comment-author">
+                You
+            </div>
+
+            <div class="comment-text">
+                ${escapeHTML(text)}
+            </div>
+
+        </div>
+
+    `;
+
+    document
+        .getElementById("commentList")
+        .prepend(comment);
+
+    input.value = "";
+
+    showToast("Comment added!");
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(text){
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================================================
+   CREATE
+========================================================= */
+
+function openCreate(){
+
+    document
+        .getElementById("createPanel")
+        .classList.toggle("open");
+
+    document
+        .getElementById("notificationPanel")
+        .classList.remove("open");
+
+}
+
+
+function createVideo(){
+
+    const title =
+        document
+            .getElementById("newTitle")
+            .value
+            .trim();
+
+    const description =
+        document
+            .getElementById("newDescription")
+            .value
+            .trim();
+
+    if(!title){
+
+        showToast(
+            "Enter a video title"
+        );
+
+        return;
+
+    }
+
+    const grid =
+        document.getElementById("videoGrid");
+
+    const card =
+        document.createElement("article");
+
+    card.className =
+        "video-card";
+
+    card.dataset.title =
+        title;
+
+    card.dataset.category =
+        "all";
+
+    card.onclick =
+        function(){
+
+            openVideo(card);
+
+        };
+
+    const imageURL =
+        "https://picsum.photos/seed/" +
+        Date.now() +
+        "/800/450";
+
+    card.innerHTML = `
+
+        <div class="thumbnail">
+
+            <img src="${imageURL}">
+
+            <span class="duration">
+                NEW
+            </span>
+
+        </div>
+
+        <div class="video-info">
+
+            <div class="channel-avatar">
+                G
+            </div>
+
+            <div class="video-details">
+
+                <div class="video-title">
+                    ${escapeHTML(title)}
+                </div>
+
+                <div class="channel-name">
+                    George Channel ✓
+                </div>
+
+                <div class="video-meta">
+                    Just now · 0 views
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+    grid.prepend(card);
+
+    document
+        .getElementById("newTitle")
+        .value = "";
+
+    document
+        .getElementById("newDescription")
+        .value = "";
+
+    document
+        .getElementById("createPanel")
+        .classList.remove("open");
+
+    showToast("Video published!");
+
+}
+
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+function toggleNotifications(){
+
+    document
+        .getElementById("notificationPanel")
+        .classList.toggle("open");
+
+    document
+        .getElementById("createPanel")
+        .classList.remove("open");
+
+}
+
+
+/* =========================================================
+   ESCAPE KEY
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Escape"){
+
+            closePlayer();
+
+            document
+                .getElementById("createPanel")
+                .classList.remove("open");
+
+            document
+                .getElementById("notificationPanel")
+                .classList.remove("open");
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   CLOSE MODALS BY CLICKING OUTSIDE
+========================================================= */
+
+document
+    .getElementById("playerModal")
+    .addEventListener(
+        "click",
+        function(event){
+
+            if(event.target === this){
+
+                closePlayer();
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
