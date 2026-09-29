@@ -1,0 +1,2483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InstaNova</title>
+
+<style>
+/* =========================================================
+   RESET + VARIABLES
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --black: #000;
+    --dark: #0a0a0a;
+    --card: #111;
+    --card2: #181818;
+    --border: #292929;
+    --white: #fff;
+    --gray: #a8a8a8;
+    --blue: #0095f6;
+    --red: #ff3040;
+}
+
+body {
+    background: var(--black);
+    color: var(--white);
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+    min-height: 100vh;
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 20px;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 245px;
+    border-right: 1px solid var(--border);
+    background: rgba(0,0,0,.96);
+    padding: 28px 12px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logo {
+    margin: 0 15px 38px;
+    font-size: 27px;
+    font-weight: 900;
+    font-style: italic;
+
+    background:
+        linear-gradient(
+            45deg,
+            #ffdc80,
+            #fcaf45,
+            #f77737,
+            #e1306c,
+            #c13584,
+            #833ab4
+        );
+
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.nav {
+    list-style: none;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    padding: 13px 15px;
+    margin-bottom: 5px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.nav-item:hover {
+    background: #171717;
+}
+
+.nav-item.active {
+    font-weight: 800;
+}
+
+.nav-icon {
+    width: 27px;
+    font-size: 23px;
+    text-align: center;
+}
+
+.sidebar-profile {
+    display: flex;
+    gap: 11px;
+    align-items: center;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.sidebar-profile:hover {
+    background: #171717;
+}
+
+.sidebar-profile img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main {
+    margin-left: 245px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.feed {
+    width: 630px;
+    padding: 25px 15px 100px;
+}
+
+/* =========================================================
+   TOP MOBILE BAR
+========================================================= */
+
+.mobile-top {
+    display: none;
+}
+
+/* =========================================================
+   STORIES
+========================================================= */
+
+.stories {
+    display: flex;
+    gap: 17px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 10px 5px 25px;
+}
+
+.stories::-webkit-scrollbar {
+    display: none;
+}
+
+.story {
+    min-width: 70px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.story-ring {
+    width: 67px;
+    height: 67px;
+    padding: 3px;
+    margin: auto auto 7px;
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            45deg,
+            #feda75,
+            #fa7e1e,
+            #d62976,
+            #962fbf,
+            #4f5bd5
+        );
+}
+
+.story-ring.seen {
+    background: #444;
+}
+
+.story-avatar {
+    width: 100%;
+    height: 100%;
+    border: 3px solid black;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.story-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.story-name {
+    color: #ddd;
+    font-size: 12px;
+}
+
+/* =========================================================
+   POST
+========================================================= */
+
+.post {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 25px;
+    margin-bottom: 28px;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 9px;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.username {
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.verified {
+    color: #3897f0;
+}
+
+.time {
+    color: var(--gray);
+    font-size: 13px;
+}
+
+.more {
+    font-size: 20px;
+    letter-spacing: 3px;
+    cursor: pointer;
+}
+
+/* =========================================================
+   POST MEDIA
+========================================================= */
+
+.post-media {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 5px;
+    position: relative;
+    background: #111;
+    cursor: pointer;
+}
+
+.post-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.art {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.art-1 {
+    background:
+        radial-gradient(
+            circle at 25% 25%,
+            #ff006e,
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 75% 75%,
+            #8338ec,
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #090909,
+            #27114d
+        );
+}
+
+.art-2 {
+    background:
+        radial-gradient(
+            circle at 70% 30%,
+            #00f5d4,
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 20% 80%,
+            #00bbf9,
+            transparent 30%
+        ),
+        #001219;
+}
+
+.art-3 {
+    background:
+        radial-gradient(
+            circle,
+            #ffbe0b,
+            transparent 22%
+        ),
+        linear-gradient(
+            135deg,
+            #370617,
+            #6a040f
+        );
+}
+
+.art-icon {
+    font-size: 90px;
+    filter: drop-shadow(0 20px 20px rgba(0,0,0,.5));
+}
+
+.art h2 {
+    margin-top: 15px;
+    font-size: 25px;
+}
+
+.art p {
+    margin-top: 5px;
+    color: #ddd;
+}
+
+/* =========================================================
+   HEART ANIMATION
+========================================================= */
+
+.big-heart {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 100px;
+    transform: translate(-50%,-50%) scale(0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.big-heart.animate {
+    animation: heart .8s ease;
+}
+
+@keyframes heart {
+
+    0% {
+        transform: translate(-50%,-50%) scale(0);
+        opacity: 0;
+    }
+
+    30% {
+        transform: translate(-50%,-50%) scale(1.3);
+        opacity: 1;
+    }
+
+    70% {
+        transform: translate(-50%,-50%) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%,-50%) scale(.8);
+        opacity: 0;
+    }
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 11px 2px 7px;
+}
+
+.action-group {
+    display: flex;
+    gap: 18px;
+}
+
+.action {
+    font-size: 26px;
+    cursor: pointer;
+    transition: transform .15s;
+    user-select: none;
+}
+
+.action:hover {
+    transform: scale(1.13);
+}
+
+.action.liked {
+    color: var(--red);
+}
+
+.action.saved {
+    color: white;
+}
+
+/* =========================================================
+   POST TEXT
+========================================================= */
+
+.likes {
+    font-size: 14px;
+    font-weight: 750;
+    margin: 4px 0 7px;
+}
+
+.caption {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.caption strong {
+    margin-right: 5px;
+}
+
+.hashtag {
+    color: #4f8cff;
+}
+
+.comments-link {
+    color: var(--gray);
+    margin-top: 7px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.comment-box {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid #222;
+    padding: 10px 0 8px;
+}
+
+.comment-box input {
+    flex: 1;
+    background: none;
+    color: white;
+    border: none;
+    outline: none;
+}
+
+.comment-box button {
+    border: none;
+    background: none;
+    color: var(--blue);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* =========================================================
+   RIGHT SIDEBAR
+========================================================= */
+
+.right {
+    position: fixed;
+    left: calc(50% + 330px);
+    top: 45px;
+    width: 300px;
+}
+
+.account {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.account-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.account-user img {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+}
+
+.account-user small {
+    display: block;
+    color: var(--gray);
+}
+
+.follow-btn {
+    border: none;
+    background: none;
+    color: var(--blue);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.suggestion-heading {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.suggestion-heading span:first-child {
+    color: var(--gray);
+    font-weight: bold;
+}
+
+.suggestion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 17px;
+}
+
+.suggestion-user {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.suggestion img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.suggestion small {
+    display: block;
+    color: #777;
+    margin-top: 2px;
+}
+
+/* =========================================================
+   SEARCH PANEL
+========================================================= */
+
+.search-panel {
+    position: fixed;
+    left: 245px;
+    top: 0;
+    width: 400px;
+    height: 100vh;
+    background: #111;
+    border-right: 1px solid #333;
+    z-index: 1500;
+    padding: 30px;
+    transform: translateX(-110%);
+    transition: .3s;
+}
+
+.search-panel.open {
+    transform: translateX(0);
+}
+
+.search-panel h2 {
+    margin-bottom: 25px;
+}
+
+.search-input {
+    width: 100%;
+    background: #222;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 13px 15px;
+    border-radius: 10px;
+}
+
+.search-results {
+    margin-top: 25px;
+}
+
+.result {
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.result:hover {
+    background: #222;
+}
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.75);
+    backdrop-filter: blur(8px);
+    z-index: 3000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-card {
+    width: min(500px, 92vw);
+    background: #171717;
+    border: 1px solid #333;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.modal-title {
+    text-align: center;
+    font-weight: bold;
+    padding: 17px;
+    border-bottom: 1px solid #333;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.close {
+    float: right;
+    cursor: pointer;
+    font-size: 22px;
+}
+
+/* =========================================================
+   CREATE POST
+========================================================= */
+
+.create-text {
+    width: 100%;
+    min-height: 120px;
+    resize: none;
+    background: #222;
+    color: white;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 15px;
+}
+
+.file-label {
+    display: block;
+    padding: 15px;
+    text-align: center;
+    border: 1px dashed #555;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+#createImage {
+    display: none;
+}
+
+.primary-btn {
+    width: 100%;
+    border: none;
+    background: var(--blue);
+    color: white;
+    padding: 13px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.primary-btn:hover {
+    background: #0085df;
+}
+
+/* =========================================================
+   STORY MODAL
+========================================================= */
+
+.story-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.95);
+    z-index: 5000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.story-modal.open {
+    display: flex;
+}
+
+.story-view {
+    width: min(430px, 92vw);
+    height: min(750px, 90vh);
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    background: #222;
+}
+
+.story-view img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.story-close {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.story-bar {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    height: 3px;
+    background: rgba(255,255,255,.4);
+}
+
+.story-bar span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: white;
+    animation: storyTimer 5s linear forwards;
+}
+
+@keyframes storyTimer {
+    to {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+.notifications {
+    position: fixed;
+    right: 25px;
+    top: 25px;
+    width: 330px;
+    background: #181818;
+    border: 1px solid #333;
+    border-radius: 15px;
+    padding: 18px;
+    z-index: 2500;
+    display: none;
+    box-shadow: 0 20px 70px rgba(0,0,0,.7);
+}
+
+.notifications.open {
+    display: block;
+}
+
+.notification {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.notification img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translate(-50%,120px);
+    background: white;
+    color: black;
+    padding: 12px 22px;
+    border-radius: 30px;
+    font-weight: bold;
+    z-index: 9000;
+    transition: .3s;
+}
+
+.toast.show {
+    transform: translate(-50%,0);
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+.mobile-nav {
+    display: none;
+}
+
+@media(max-width:1100px) {
+
+    .right {
+        display: none;
+    }
+
+    .feed {
+        width: 630px;
+    }
+}
+
+@media(max-width:700px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .feed {
+        width: 100%;
+        padding: 0 0 70px;
+    }
+
+    .mobile-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 55px;
+        padding: 0 16px;
+        position: sticky;
+        top: 0;
+        background: rgba(0,0,0,.92);
+        backdrop-filter: blur(15px);
+        z-index: 900;
+        border-bottom: 1px solid #222;
+    }
+
+    .mobile-logo {
+        font-size: 23px;
+        font-weight: 900;
+        font-style: italic;
+    }
+
+    .post-media {
+        border-radius: 0;
+    }
+
+    .post-header,
+    .actions,
+    .likes,
+    .caption,
+    .comments-link,
+    .comment-box {
+        margin-left: 12px;
+        margin-right: 12px;
+    }
+
+    .mobile-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        background: rgba(0,0,0,.96);
+        border-top: 1px solid #222;
+        z-index: 2000;
+    }
+
+    .mobile-nav span {
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .search-panel {
+        left: 0;
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =======================================================
+     SIDEBAR
+======================================================= -->
+
+<aside class="sidebar">
+
+    <div>
+
+        <div class="logo">InstaNova</div>
+
+        <ul class="nav">
+
+            <li class="nav-item active" onclick="goHome()">
+                <span class="nav-icon">⌂</span>
+                <span>Home</span>
+            </li>
+
+            <li class="nav-item" onclick="openSearch()">
+                <span class="nav-icon">⌕</span>
+                <span>Search</span>
+            </li>
+
+            <li class="nav-item">
+                <span class="nav-icon">◉</span>
+                <span>Explore</span>
+            </li>
+
+            <li class="nav-item">
+                <span class="nav-icon">▶</span>
+                <span>Reels</span>
+            </li>
+
+            <li class="nav-item">
+                <span class="nav-icon">✉</span>
+                <span>Messages</span>
+            </li>
+
+            <li class="nav-item" onclick="toggleNotifications()">
+                <span class="nav-icon">♡</span>
+                <span>Notifications</span>
+            </li>
+
+            <li class="nav-item" onclick="openCreate()">
+                <span class="nav-icon">＋</span>
+                <span>Create</span>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div class="sidebar-profile" onclick="openProfile()">
+
+        <img src="https://i.pravatar.cc/100?img=12">
+
+        <div>
+            <strong>george_tiffany</strong>
+            <small style="display:block;color:#777;">
+                View profile
+            </small>
+        </div>
+
+    </div>
+
+</aside>
+
+<!-- =======================================================
+     SEARCH PANEL
+======================================================= -->
+
+<section class="search-panel" id="searchPanel">
+
+    <h2>Search</h2>
+
+    <input
+        class="search-input"
+        id="searchInput"
+        placeholder="Search people or posts..."
+    >
+
+    <div class="search-results" id="searchResults"></div>
+
+</section>
+
+<!-- =======================================================
+     MAIN
+======================================================= -->
+
+<main class="main">
+
+<div class="feed">
+
+<header class="mobile-top">
+
+    <strong class="mobile-logo">InstaNova</strong>
+
+    <span onclick="openSearch()">⌕</span>
+
+</header>
+
+<!-- =======================================================
+     STORIES
+======================================================= -->
+
+<section class="stories">
+
+    <div class="story" onclick="openStory(0)">
+        <div class="story-ring">
+            <div class="story-avatar">
+                <img src="https://i.pravatar.cc/200?img=12">
+            </div>
+        </div>
+        <div class="story-name">Your story</div>
+    </div>
+
+    <div class="story" onclick="openStory(1)">
+        <div class="story-ring">
+            <div class="story-avatar">
+                <img src="https://i.pravatar.cc/200?img=32">
+            </div>
+        </div>
+        <div class="story-name">alex</div>
+    </div>
+
+    <div class="story" onclick="openStory(2)">
+        <div class="story-ring">
+            <div class="story-avatar">
+                <img src="https://i.pravatar.cc/200?img=44">
+            </div>
+        </div>
+        <div class="story-name">maya</div>
+    </div>
+
+    <div class="story" onclick="openStory(3)">
+        <div class="story-ring">
+            <div class="story-avatar">
+                <img src="https://i.pravatar.cc/200?img=49">
+            </div>
+        </div>
+        <div class="story-name">science</div>
+    </div>
+
+    <div class="story" onclick="openStory(4)">
+        <div class="story-ring">
+            <div class="story-avatar">
+                <img src="https://i.pravatar.cc/200?img=58">
+            </div>
+        </div>
+        <div class="story-name">coding</div>
+    </div>
+
+    <div class="story" onclick="openStory(5)">
+        <div class="story-ring">
+            <div class="story-avatar">
+                <img src="https://i.pravatar.cc/200?img=68">
+            </div>
+        </div>
+        <div class="story-name">travel</div>
+    </div>
+
+</section>
+
+<!-- =======================================================
+     POST 1
+======================================================= -->
+
+<article class="post" data-search="george tiffany coding physics trumpet">
+
+<header class="post-header">
+
+    <div class="user">
+
+        <div class="avatar">
+            <img src="https://i.pravatar.cc/100?img=12">
+        </div>
+
+        <div>
+            <span class="username">
+                george_tiffany
+                <span class="verified">●</span>
+            </span>
+
+            <span class="time"> · 2h</span>
+        </div>
+
+    </div>
+
+    <div class="more" onclick="showToast('Post options')">
+        •••
+    </div>
+
+</header>
+
+<div
+    class="post-media"
+    ondblclick="doubleLike(this)"
+>
+
+    <div class="art art-1">
+
+        <div class="art-icon">🎺</div>
+
+        <h2>Sound Wave Engine</h2>
+
+        <p>Physics × Code × Music</p>
+
+    </div>
+
+    <div class="big-heart">❤️</div>
+
+</div>
+
+<div class="actions">
+
+    <div class="action-group">
+
+        <span
+            class="action like"
+            onclick="likePost(this)"
+        >♡</span>
+
+        <span
+            class="action"
+            onclick="focusComment(this)"
+        >○</span>
+
+        <span
+            class="action"
+            onclick="sharePost()"
+        >➤</span>
+
+    </div>
+
+    <span
+        class="action"
+        onclick="savePost(this)"
+    >▢</span>
+
+</div>
+
+<div class="likes">
+    <span class="like-count">1405</span> likes
+</div>
+
+<div class="caption">
+    <strong>george_tiffany</strong>
+    Building a raw audio physics parsing simulator directly
+    inside the browser 🎺💻
+    <br>
+    <span class="hashtag">
+        #Coding #Physics #Music #WebDevelopment
+    </span>
+</div>
+
+<div class="comments-link">
+    View all 42 comments
+</div>
+
+<div class="comment-box">
+
+    <input
+        placeholder="Add a comment..."
+    >
+
+    <button onclick="addComment(this)">
+        Post
+    </button>
+
+</div>
+
+</article>
+
+<!-- =======================================================
+     POST 2
+======================================================= -->
+
+<article class="post" data-search="alex coding computer programming">
+
+<header class="post-header">
+
+    <div class="user">
+
+        <div class="avatar">
+            <img src="https://i.pravatar.cc/100?img=32">
+        </div>
+
+        <div>
+            <span class="username">
+                alex.codes
+            </span>
+
+            <span class="time"> · 5h</span>
+        </div>
+
+    </div>
+
+    <div class="more">•••</div>
+
+</header>
+
+<div
+    class="post-media"
+    ondblclick="doubleLike(this)"
+>
+
+    <div class="art art-2">
+
+        <div class="art-icon">💻</div>
+
+        <h2>Late Night Coding</h2>
+
+        <p>01:47 AM • Still debugging</p>
+
+    </div>
+
+    <div class="big-heart">❤️</div>
+
+</div>
+
+<div class="actions">
+
+    <div class="action-group">
+
+        <span
+            class="action like"
+            onclick="likePost(this)"
+        >♡</span>
+
+        <span
+            class="action"
+            onclick="focusComment(this)"
+        >○</span>
+
+        <span
+            class="action"
+            onclick="sharePost()"
+        >➤</span>
+
+    </div>
+
+    <span
+        class="action"
+        onclick="savePost(this)"
+    >▢</span>
+
+</div>
+
+<div class="likes">
+    <span class="like-count">829</span> likes
+</div>
+
+<div class="caption">
+
+    <strong>alex.codes</strong>
+
+    When the code finally works at 2AM 😭💻
+
+</div>
+
+<div class="comments-link">
+    View all 17 comments
+</div>
+
+<div class="comment-box">
+
+    <input placeholder="Add a comment...">
+
+    <button onclick="addComment(this)">
+        Post
+    </button>
+
+</div>
+
+</article>
+
+<!-- =======================================================
+     POST 3
+======================================================= -->
+
+<article class="post" data-search="maya science physics laboratory">
+
+<header class="post-header">
+
+    <div class="user">
+
+        <div class="avatar">
+            <img src="https://i.pravatar.cc/100?img=44">
+        </div>
+
+        <div>
+            <span class="username">
+                maya.science
+            </span>
+
+            <span class="time"> · 1d</span>
+        </div>
+
+    </div>
+
+    <div class="more">•••</div>
+
+</header>
+
+<div
+    class="post-media"
+    ondblclick="doubleLike(this)"
+>
+
+    <div class="art art-3">
+
+        <div class="art-icon">⚛️</div>
+
+        <h2>Explore Everything</h2>
+
+        <p>Science never stops.</p>
+
+    </div>
+
+    <div class="big-heart">❤️</div>
+
+</div>
+
+<div class="actions">
+
+    <div class="action-group">
+
+        <span
+            class="action like"
+            onclick="likePost(this)"
+        >♡</span>
+
+        <span
+            class="action"
+            onclick="focusComment(this)"
+        >○</span>
+
+        <span
+            class="action"
+            onclick="sharePost()"
+        >➤</span>
+
+    </div>
+
+    <span
+        class="action"
+        onclick="savePost(this)"
+    >▢</span>
+
+</div>
+
+<div class="likes">
+    <span class="like-count">2118</span> likes
+</div>
+
+<div class="caption">
+
+    <strong>maya.science</strong>
+
+    Curiosity is basically a superpower. 🔬✨
+
+</div>
+
+<div class="comments-link">
+    View all 63 comments
+</div>
+
+<div class="comment-box">
+
+    <input placeholder="Add a comment...">
+
+    <button onclick="addComment(this)">
+        Post
+    </button>
+
+</div>
+
+</article>
+
+</div>
+
+<!-- =======================================================
+     RIGHT PANEL
+======================================================= -->
+
+<aside class="right">
+
+<div class="account">
+
+    <div class="account-user">
+
+        <img src="https://i.pravatar.cc/100?img=12">
+
+        <div>
+            <strong>george_tiffany</strong>
+            <small>George Tiffany</small>
+        </div>
+
+    </div>
+
+    <button
+        class="follow-btn"
+        onclick="switchAccount()"
+    >
+        Switch
+    </button>
+
+</div>
+
+<div class="suggestion-heading">
+    <span>Suggested for you</span>
+    <span>See All</span>
+</div>
+
+<div class="suggestion">
+
+    <div class="suggestion-user">
+
+        <img src="https://i.pravatar.cc/100?img=15">
+
+        <div>
+            <strong>james.dev</strong>
+            <small>Followed by alex</small>
+        </div>
+
+    </div>
+
+    <button
+        class="follow-btn"
+        onclick="followUser(this)"
+    >
+        Follow
+    </button>
+
+</div>
+
+<div class="suggestion">
+
+    <div class="suggestion-user">
+
+        <img src="https://i.pravatar.cc/100?img=25">
+
+        <div>
+            <strong>sarah.design</strong>
+            <small>New to InstaNova</small>
+        </div>
+
+    </div>
+
+    <button
+        class="follow-btn"
+        onclick="followUser(this)"
+    >
+        Follow
+    </button>
+
+</div>
+
+<div class="suggestion">
+
+    <div class="suggestion-user">
+
+        <img src="https://i.pravatar.cc/100?img=35">
+
+        <div>
+            <strong>physics.lab</strong>
+            <small>Suggested for you</small>
+        </div>
+
+    </div>
+
+    <button
+        class="follow-btn"
+        onclick="followUser(this)"
+    >
+        Follow
+    </button>
+
+</div>
+
+</aside>
+
+</main>
+
+<!-- =======================================================
+     MOBILE NAV
+======================================================= -->
+
+<nav class="mobile-nav">
+
+    <span onclick="goHome()">⌂</span>
+
+    <span onclick="openSearch()">⌕</span>
+
+    <span onclick="openCreate()">＋</span>
+
+    <span onclick="toggleNotifications()">♡</span>
+
+    <span onclick="openProfile()">◉</span>
+
+</nav>
+
+<!-- =======================================================
+     CREATE POST MODAL
+======================================================= -->
+
+<div class="modal" id="createModal">
+
+<div class="modal-card">
+
+    <div class="modal-title">
+
+        Create new post
+
+        <span
+            class="close"
+            onclick="closeModal('createModal')"
+        >
+            ×
+        </span>
+
+    </div>
+
+    <div class="modal-body">
+
+        <textarea
+            id="postText"
+            class="create-text"
+            placeholder="Write a caption..."
+        ></textarea>
+
+        <label class="file-label">
+
+            📷 Choose an image
+
+            <input
+                id="createImage"
+                type="file"
+                accept="image/*"
+                onchange="previewImage(event)"
+            >
+
+        </label>
+
+        <img
+            id="preview"
+            style="
+                display:none;
+                width:100%;
+                max-height:300px;
+                object-fit:cover;
+                border-radius:10px;
+                margin-bottom:15px;
+            "
+        >
+
+        <button
+            class="primary-btn"
+            onclick="createPost()"
+        >
+            Share
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- =======================================================
+     PROFILE MODAL
+======================================================= -->
+
+<div class="modal" id="profileModal">
+
+<div class="modal-card">
+
+    <div class="modal-title">
+
+        Profile
+
+        <span
+            class="close"
+            onclick="closeModal('profileModal')"
+        >
+            ×
+        </span>
+
+    </div>
+
+    <div class="modal-body" style="text-align:center;">
+
+        <img
+            src="https://i.pravatar.cc/150?img=12"
+            style="
+                width:100px;
+                height:100px;
+                border-radius:50%;
+                margin-bottom:15px;
+            "
+        >
+
+        <h2>george_tiffany</h2>
+
+        <p style="color:#aaa;margin-top:8px;">
+            George Tiffany
+        </p>
+
+        <div
+            style="
+                display:flex;
+                justify-content:space-around;
+                margin-top:25px;
+            "
+        >
+
+            <div>
+                <strong>12</strong>
+                <small style="display:block;color:#888;">
+                    Posts
+                </small>
+            </div>
+
+            <div>
+                <strong>1.4K</strong>
+                <small style="display:block;color:#888;">
+                    Followers
+                </small>
+            </div>
+
+            <div>
+                <strong>342</strong>
+                <small style="display:block;color:#888;">
+                    Following
+                </small>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- =======================================================
+     STORY MODAL
+======================================================= -->
+
+<div class="story-modal" id="storyModal">
+
+<div class="story-view">
+
+    <div class="story-bar">
+        <span></span>
+    </div>
+
+    <div
+        class="story-close"
+        onclick="closeStory()"
+    >
+        ×
+    </div>
+
+    <img id="storyImage">
+
+</div>
+
+</div>
+
+<!-- =======================================================
+     NOTIFICATIONS
+======================================================= -->
+
+<div class="notifications" id="notifications">
+
+<h3 style="margin-bottom:10px;">
+    Notifications
+</h3>
+
+<div class="notification">
+
+    <img src="https://i.pravatar.cc/100?img=25">
+
+    <span>
+        <strong>sarah.design</strong>
+        liked your post ❤️
+    </span>
+
+</div>
+
+<div class="notification">
+
+    <img src="https://i.pravatar.cc/100?img=35">
+
+    <span>
+        <strong>physics.lab</strong>
+        started following you.
+    </span>
+
+</div>
+
+<div class="notification">
+
+    <img src="https://i.pravatar.cc/100?img=44">
+
+    <span>
+        <strong>maya.science</strong>
+        commented on your post.
+    </span>
+
+</div>
+
+</div>
+
+<!-- =======================================================
+     TOAST
+======================================================= -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+/* =========================================================
+   LOCAL STORAGE
+========================================================= */
+
+const savedState =
+    JSON.parse(localStorage.getItem("instanovaState")) || {
+        liked: [],
+        saved: [],
+        following: []
+    };
+
+
+function saveState() {
+
+    localStorage.setItem(
+        "instanovaState",
+        JSON.stringify(savedState)
+    );
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimeout;
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimeout);
+
+    toastTimeout = setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    }, 1800);
+
+}
+
+
+/* =========================================================
+   LIKE
+========================================================= */
+
+function likePost(button) {
+
+    const post =
+        button.closest(".post");
+
+    const number =
+        post.querySelector(".like-count");
+
+    let count =
+        parseInt(number.textContent);
+
+    if (button.classList.contains("liked")) {
+
+        button.classList.remove("liked");
+
+        button.textContent = "♡";
+
+        count--;
+
+    } else {
+
+        button.classList.add("liked");
+
+        button.textContent = "♥";
+
+        count++;
+
+    }
+
+    number.textContent =
+        count.toLocaleString();
+
+    saveState();
+
+}
+
+
+/* =========================================================
+   DOUBLE CLICK LIKE
+========================================================= */
+
+function doubleLike(media) {
+
+    const post =
+        media.closest(".post");
+
+    const button =
+        post.querySelector(".like");
+
+    if (!button.classList.contains("liked")) {
+
+        likePost(button);
+
+    }
+
+    const heart =
+        media.querySelector(".big-heart");
+
+    heart.classList.remove("animate");
+
+    void heart.offsetWidth;
+
+    heart.classList.add("animate");
+
+}
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+function savePost(button) {
+
+    button.classList.toggle("saved");
+
+    if (button.classList.contains("saved")) {
+
+        button.textContent = "▣";
+
+        showToast("Post saved");
+
+    } else {
+
+        button.textContent = "▢";
+
+        showToast("Post removed from saved");
+
+    }
+
+    saveState();
+
+}
+
+
+/* =========================================================
+   COMMENT
+========================================================= */
+
+function focusComment(button) {
+
+    const post =
+        button.closest(".post");
+
+    const input =
+        post.querySelector("input");
+
+    input.focus();
+
+}
+
+
+function addComment(button) {
+
+    const box =
+        button.closest(".comment-box");
+
+    const input =
+        box.querySelector("input");
+
+    const text =
+        input.value.trim();
+
+    if (!text) {
+
+        showToast("Write a comment first");
+
+        return;
+
+    }
+
+    const post =
+        button.closest(".post");
+
+    const comments =
+        post.querySelector(".comments-link");
+
+    comments.textContent =
+        "Your comment: " + text;
+
+    input.value = "";
+
+    showToast("Comment posted 💬");
+
+}
+
+
+/* =========================================================
+   FOLLOW
+========================================================= */
+
+function followUser(button) {
+
+    if (button.textContent === "Follow") {
+
+        button.textContent = "Following";
+
+        button.style.color = "#aaa";
+
+        showToast("Following");
+
+    } else {
+
+        button.textContent = "Follow";
+
+        button.style.color = "#0095f6";
+
+        showToast("Unfollowed");
+
+    }
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function openSearch() {
+
+    document
+        .getElementById("searchPanel")
+        .classList.add("open");
+
+    setTimeout(() => {
+
+        document
+            .getElementById("searchInput")
+            .focus();
+
+    }, 200);
+
+}
+
+
+const searchInput =
+    document.getElementById("searchInput");
+
+searchInput.addEventListener(
+    "input",
+    searchPosts
+);
+
+
+function searchPosts() {
+
+    const query =
+        searchInput.value
+            .toLowerCase()
+            .trim();
+
+    const posts =
+        document.querySelectorAll(".post");
+
+    posts.forEach(post => {
+
+        const text =
+            post.dataset.search.toLowerCase();
+
+        post.style.display =
+            text.includes(query)
+                ? ""
+                : "none";
+
+    });
+
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+function goHome() {
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================================================
+   CREATE POST
+========================================================= */
+
+function openCreate() {
+
+    document
+        .getElementById("createModal")
+        .classList.add("open");
+
+}
+
+
+function previewImage(event) {
+
+    const file =
+        event.target.files[0];
+
+    if (!file) return;
+
+    const preview =
+        document.getElementById("preview");
+
+    preview.src =
+        URL.createObjectURL(file);
+
+    preview.style.display =
+        "block";
+
+}
+
+
+function createPost() {
+
+    const text =
+        document
+            .getElementById("postText")
+            .value
+            .trim();
+
+    const file =
+        document
+            .getElementById("createImage")
+            .files[0];
+
+    if (!text && !file) {
+
+        showToast("Add a caption or image");
+
+        return;
+
+    }
+
+    const post =
+        document.createElement("article");
+
+    post.className = "post";
+
+    post.dataset.search =
+        text.toLowerCase();
+
+    let media = "";
+
+    if (file) {
+
+        const imageURL =
+            URL.createObjectURL(file);
+
+        media = `
+            <div
+                class="post-media"
+                ondblclick="doubleLike(this)"
+            >
+                <img src="${imageURL}">
+                <div class="big-heart">❤️</div>
+            </div>
+        `;
+
+    } else {
+
+        media = `
+            <div
+                class="post-media"
+                ondblclick="doubleLike(this)"
+            >
+                <div
+                    class="art"
+                    style="
+                        background:
+                        linear-gradient(
+                            135deg,
+                            #8338ec,
+                            #ff006e
+                        );
+                    "
+                >
+                    <div class="art-icon">✨</div>
+                    <h2>New Post</h2>
+                </div>
+
+                <div class="big-heart">❤️</div>
+            </div>
+        `;
+
+    }
+
+    post.innerHTML = `
+
+        <header class="post-header">
+
+            <div class="user">
+
+                <div class="avatar">
+                    <img src="https://i.pravatar.cc/100?img=12">
+                </div>
+
+                <div>
+
+                    <span class="username">
+                        george_tiffany
+                        <span class="verified">●</span>
+                    </span>
+
+                    <span class="time"> · now</span>
+
+                </div>
+
+            </div>
+
+            <div class="more">•••</div>
+
+        </header>
+
+        ${media}
+
+        <div class="actions">
+
+            <div class="action-group">
+
+                <span
+                    class="action like"
+                    onclick="likePost(this)"
+                >♡</span>
+
+                <span
+                    class="action"
+                    onclick="focusComment(this)"
+                >○</span>
+
+                <span
+                    class="action"
+                    onclick="sharePost()"
+                >➤</span>
+
+            </div>
+
+            <span
+                class="action"
+                onclick="savePost(this)"
+            >▢</span>
+
+        </div>
+
+        <div class="likes">
+
+            <span class="like-count">
+                0
+            </span>
+
+            likes
+
+        </div>
+
+        <div class="caption">
+
+            <strong>
+                george_tiffany
+            </strong>
+
+            ${escapeHTML(text)}
+
+        </div>
+
+        <div class="comments-link">
+            Be the first to comment
+        </div>
+
+        <div class="comment-box">
+
+            <input
+                placeholder="Add a comment..."
+            >
+
+            <button
+                onclick="addComment(this)"
+            >
+                Post
+            </button>
+
+        </div>
+
+    `;
+
+    document
+        .querySelector(".feed")
+        .appendChild(post);
+
+    document
+        .getElementById("postText")
+        .value = "";
+
+    document
+        .getElementById("createImage")
+        .value = "";
+
+    document
+        .getElementById("preview")
+        .style.display = "none";
+
+    closeModal("createModal");
+
+    showToast("Your post is live! 🚀");
+
+}
+
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+function sharePost() {
+
+    if (
+        navigator.share
+    ) {
+
+        navigator.share({
+            title: "InstaNova post",
+            text: "Check out this post!"
+        });
+
+    } else {
+
+        showToast("Post link copied!");
+
+    }
+
+}
+
+
+/* =========================================================
+   STORIES
+========================================================= */
+
+const stories = [
+
+    "https://i.pravatar.cc/800?img=12",
+    "https://i.pravatar.cc/800?img=32",
+    "https://i.pravatar.cc/800?img=44",
+    "https://i.pravatar.cc/800?img=49",
+    "https://i.pravatar.cc/800?img=58",
+    "https://i.pravatar.cc/800?img=68"
+
+];
+
+
+function openStory(index) {
+
+    document
+        .getElementById("storyImage")
+        .src = stories[index];
+
+    document
+        .getElementById("storyModal")
+        .classList.add("open");
+
+}
+
+
+function closeStory() {
+
+    document
+        .getElementById("storyModal")
+        .classList.remove("open");
+
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function openProfile() {
+
+    document
+        .getElementById("profileModal")
+        .classList.add("open");
+
+}
+
+
+/* =========================================================
+   MODAL CLOSE
+========================================================= */
+
+function closeModal(id) {
+
+    document
+        .getElementById(id)
+        .classList.remove("open");
+
+}
+
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+function toggleNotifications() {
+
+    document
+        .getElementById("notifications")
+        .classList.toggle("open");
+
+}
+
+
+/* =========================================================
+   SWITCH ACCOUNT
+========================================================= */
+
+function switchAccount() {
+
+    showToast("Account switcher opened");
+
+}
+
+
+/* =========================================================
+   CLICK OUTSIDE MODALS
+========================================================= */
+
+document.addEventListener(
+    "click",
+    event => {
+
+        const search =
+            document.getElementById("searchPanel");
+
+        if (
+            search.classList.contains("open") &&
+            !search.contains(event.target) &&
+            !event.target.closest(".nav-item")
+        ) {
+
+            search.classList.remove("open");
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key === "Escape") {
+
+            document
+                .querySelectorAll(
+                    ".modal.open, .story-modal.open"
+                )
+                .forEach(el =>
+                    el.classList.remove("open")
+                );
+
+            document
+                .getElementById("searchPanel")
+                .classList.remove("open");
+
+            document
+                .getElementById("notifications")
+                .classList.remove("open");
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
