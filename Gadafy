@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1483,5 +1483,7 @@ document
 </script>
 
 </body>
+<footer>
+<p>powered by Gadafy odhiambo copyright © 2026🕶️</p>
+</footer>
 </html>
-```
